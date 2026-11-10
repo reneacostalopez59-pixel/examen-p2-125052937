@@ -2,9 +2,9 @@
 import sys
 import csv
 
-IDX_PRODUCTO = 3
-IDX_CANTIDAD = 4
-IDX_PRECIO = 5
+IDX_PRODUCTO = 4
+IDX_CANTIDAD = 5
+IDX_PRECIO = 6
 
 archivo_csv = sys.argv[1] if len(sys.argv) > 1 else "/data/input/ventas_125052937.csv"
 acumulado = {}
