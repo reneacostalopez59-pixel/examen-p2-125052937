@@ -1,0 +1,50 @@
+services:
+  hadoop:
+    build: ./hadoop
+    container_name: hadoop
+    hostname: hadoop
+    volumes:
+      - ./data/input:/data/input:ro
+      - ./data/output:/data/output
+      - ./mapreduce:/mapreduce
+      - ssh_keys:/root/.ssh
+    networks:
+      - pipeline_net
+
+  db:
+    image: postgres:15-alpine
+    container_name: db
+    hostname: db
+    env_file:
+      - .env
+    volumes:
+      - db_data:/var/lib/postgresql/data
+    ports:
+      - "5432:5432"
+    networks:
+      - pipeline_net
+
+  api:
+    build: ./api
+    container_name: api
+    hostname: api
+    env_file:
+      - .env
+    ports:
+      - "8000:8000"
+    volumes:
+      - ./data/output:/data/output
+      - ./scripts:/scripts
+      - ssh_keys:/root/.ssh
+    depends_on:
+      - db
+    networks:
+      - pipeline_net
+
+volumes:
+  db_data:
+  ssh_keys:
+
+networks:
+  pipeline_net:
+    driver: bridge
